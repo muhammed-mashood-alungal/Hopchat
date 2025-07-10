@@ -1,16 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { ClientProxy, ClientProxyFactory } from '@nestjs/microservices';
-import { rabbitMQConfig } from 'src/rabbitmq/rabbitmq.options';
+import { RabbitmqService } from 'src/rabbitmq/rabbitmq.service';
 
 @Injectable()
 export class MessagingService {
-  private client: ClientProxy;
+  constructor(private readonly rabbitMqService: RabbitmqService) {}
 
-  constructor(){
-    this.client = ClientProxyFactory.create(rabbitMQConfig())
+  async handleData(data: any) {
+    console.log('handling data');
+    console.log(data);
   }
-
-  async sendMessage(pattern : string , message : string){
-    return this.client.emit(pattern , {sender : 'Client-A',message})
+  
+  async sendMessage(message: string) {
+    return this.rabbitMqService.sendMessage('test', {
+      sender: 'Client-A',
+      message,
+    });
   }
 }

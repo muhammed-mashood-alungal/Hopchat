@@ -17,6 +17,8 @@ async function bootstrap() {
   })
 
   await app.startAllMicroservices()
-  await app.listen(3001)
+
+  const port = process.env.PORT || 5001
+  await app.listen(port)
 }
 bootstrap();
