@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"     
+      - "15672:15672"   
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  client-a:
+    build:
+      context: ./client-a
+      dockerfile: Dockerfile
+    container_name: client-a
+    depends_on:
+      - rabbitmq
+    environment:
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      QUEUE_NAME: to-clientB
+      LISTEN_QUEUE: to-clientA
+    ports:
+      - "3001:3000"
+
+  client-b:
+    build:
+      context: ./client-b
+      dockerfile: Dockerfile
+    container_name: client-b
+    depends_on:
+      - rabbitmq
+    environment:
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      QUEUE_NAME: to-clientA
+      LISTEN_QUEUE: to-clientB
+    ports:
+      - "3002:3000"
