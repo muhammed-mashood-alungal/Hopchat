@@ -4,7 +4,7 @@ import { Response } from 'express';
 import { MessageDto } from './message.dto';
 import { successResponse } from 'src/utils/response.util';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
-import { EventPattern, Payload } from '@nestjs/microservices';
+import { Ctx, EventPattern, MessagePattern, Payload, RmqContext } from '@nestjs/microservices';
 
 @Controller('messaging')
 export class MessagingController {
@@ -18,7 +18,16 @@ export class MessagingController {
   }
 
   @EventPattern('test')
-  async handleIncomingData(@Payload() data: any) {
-    this.messageService.handleData(data)
+  async handleIncomingData(@Payload() data: any , @Ctx() context : RmqContext) {
+    try {
+        console.log('Received')
+        const channel = context.getChannelRef()
+        const originalMsg = context.getMessage()
+        
+        this.messageService.handleData(data)
+        channel.ack(originalMsg)
+    } catch (error) {
+        console.log('ERROR' + error) 
+    }
   }
 }

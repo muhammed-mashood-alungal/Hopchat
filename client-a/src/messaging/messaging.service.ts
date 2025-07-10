@@ -9,9 +9,9 @@ export class MessagingService {
     console.log('handling data');
     console.log(data);
   }
-  
+
   async sendMessage(message: string) {
-    return this.rabbitMqService.sendMessage('test', {
+    return  await this.rabbitMqService.sendMessage('test', {
       sender: 'Client-A',
       message,
     });

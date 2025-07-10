@@ -1,13 +1,15 @@
 import { Transport, RmqOptions } from '@nestjs/microservices';
 import { QUEUES } from './constants';
 
-export const rabbitMQConfig = (): RmqOptions => ({
+export const rabbitMQConsumerConfig = (): RmqOptions => ({
   transport: Transport.RMQ,
   options: {
     urls: [process.env.RABBIT_MQ_URL!],
-    queue: QUEUES.TO_CLIENT_B,
+    queue: process.env.LISTEN_QUEUE!,
     queueOptions: {
       durable: true,
     },
+    noAck: false,
   },
 });
+ 
