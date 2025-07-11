@@ -1,4 +1,4 @@
-import { Send, Users, Wifi } from "lucide-react";
+import { Send, Users, } from "lucide-react";
 import type { Message } from "../types/message.type";
 import type { Socket } from "socket.io-client";
 import { useEffect, useState } from "react";

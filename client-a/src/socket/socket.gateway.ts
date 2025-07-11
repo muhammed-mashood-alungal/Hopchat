@@ -1,10 +1,16 @@
 import {
+  HttpException,
+  HttpStatus,
+  InternalServerErrorException,
+} from '@nestjs/common';
+import {
   OnGatewayConnection,
   OnGatewayDisconnect,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { errorMessages } from 'src/common/constants/error-messages.constants';
 
 @WebSocketGateway({
   cors: { origin: '*' },
@@ -26,7 +32,10 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (this.clientId) {
       this.server.to(this.clientId).emit('message', data);
     } else {
-      console.log('No client connected.!!!');
+      throw new HttpException(
+        errorMessages.NO_CLIENT_CONNECTED,
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 }

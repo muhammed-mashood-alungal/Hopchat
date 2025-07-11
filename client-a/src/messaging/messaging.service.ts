@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { RabbitmqService } from 'src/rabbitmq/rabbitmq.service';
 import { SocketGateway } from 'src/socket/socket.gateway';
-import { MessageType } from './message.types';
+import { MessageDto } from './message.dto';
 
 @Injectable()
 export class MessagingService {
@@ -10,11 +10,13 @@ export class MessagingService {
     private readonly socketGateway: SocketGateway,
   ) {}
 
-  async handleData(data: any) {
+  async handleData(data: unknown) {
+    console.log('MESSAGE FROM CLIENT-B : ')
+    console.log(data)
     this.socketGateway.emitMessageToClient(data);
   }
 
-  async sendMessage(data : MessageType) {
-    return await this.rabbitMqService.sendMessage('test', data);
+  async sendMessage(data: MessageDto) {
+    return await this.rabbitMqService.sendMessage('message', data);
   }
 }

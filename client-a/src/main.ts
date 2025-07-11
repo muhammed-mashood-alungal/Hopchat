@@ -1,7 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { MicroserviceOptions } from '@nestjs/microservices';
 import { rabbitMQConsumerConfig } from './rabbitmq/rabbitmq.consumer.options';
+import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +15,8 @@ async function bootstrap() {
   app.connectMicroservice<MicroserviceOptions>(rabbitMQConsumerConfig());
 
   await app.startAllMicroservices();
+
+  app.useGlobalFilters(new AllExceptionsFilter())
 
   const port = process.env.PORT || 5000;
 
