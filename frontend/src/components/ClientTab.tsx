@@ -1,4 +1,4 @@
-import { Send, Users, } from "lucide-react";
+import { Send, Users } from "lucide-react";
 import type { Message } from "../types/message.type";
 import type { Socket } from "socket.io-client";
 import { useEffect, useState } from "react";
@@ -30,7 +30,6 @@ const ClientTab: React.FC<{
         newMessages.push(newMessage);
         return newMessages;
       });
-      
     });
   }, [socket]);
 
@@ -50,7 +49,7 @@ const ClientTab: React.FC<{
       newMsgs.push({ ...newMessage, type: "sent" });
       return newMsgs;
     });
-    setMyMessage('')
+    setMyMessage("");
 
     if (clientId === "clientA") {
       await API_ONE_SERVICES.sendMessage(newMessage);
@@ -108,7 +107,7 @@ const ClientTab: React.FC<{
               </div>
             ))}
             {messages.length == 0 && (
-                <div className="text-center text-gray-600">No Messages Yet</div>
+              <div className="text-center text-gray-600">No Messages Yet</div>
             )}
           </div>
         </div>

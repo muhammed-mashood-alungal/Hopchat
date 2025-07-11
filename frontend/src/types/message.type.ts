@@ -3,5 +3,5 @@ export interface Message {
   sender: string;
   text: string;
   timestamp: string;
-  type: 'sent' | 'received';
+  type: "sent" | "received";
 }

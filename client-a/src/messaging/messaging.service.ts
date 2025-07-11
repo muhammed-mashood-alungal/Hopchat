@@ -16,7 +16,7 @@ export class MessagingService {
     this.socketGateway.emitMessageToClient(data);
   }
 
-  async sendMessage(data: MessageDto) {
-    return await this.rabbitMqService.sendMessage('message', data);
+  async sendMessage(message: MessageDto) {
+    return await this.rabbitMqService.sendMessage('message', message);
   }
 }

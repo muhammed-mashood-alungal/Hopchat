@@ -1,6 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ClientProxy, ClientProxyFactory } from '@nestjs/microservices';
 import { rabbitMQProducerConfig } from './rabbitmq.producer.options';
+import { lastValueFrom, retry } from 'rxjs';
+import { errorMessages } from 'src/common/constants/error-messages.constants';
 
 @Injectable()
 export class RabbitmqService {
@@ -10,6 +12,11 @@ export class RabbitmqService {
   }
 
   async sendMessage(pattern: string, data: any) {
-     return await  this.client.emit(pattern, data);
+    try {
+      const observable$ = this.client.emit(pattern, data).pipe(retry(3));
+      return await lastValueFrom(observable$);
+    } catch (error) {
+      throw new InternalServerErrorException(errorMessages.MESSAGE_SENT_FAILED);
+    }
   }
 }

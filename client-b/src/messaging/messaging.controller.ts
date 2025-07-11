@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, InternalServerErrorException, Post, Res } from '@nestjs/common';
 import {
   Ctx,
   EventPattern,
@@ -11,18 +11,19 @@ import { MessageDto } from './message.dto';
 import { successResponse } from 'src/utils/response.util';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { Response } from 'express';
+import { errorMessages } from 'src/common/constants/error-messages.constants';
 
 @Controller('messaging')
 export class MessagingController {
   constructor(private readonly messageService: MessagingService) {}
 
   @Post('send')
-  sendMessage(@Body() data: MessageDto, @Res() res: Response) {
-    this.messageService.sendMessage(data);
+  sendMessage(@Body() message: MessageDto, @Res() res: Response) {
+    this.messageService.sendMessage(message);
     successResponse(res, StatusCodes.OK, ReasonPhrases.OK);
   }
 
-  @EventPattern('test')
+  @EventPattern('message')
   async handleIncomingData(@Payload() data: any, @Ctx() context: RmqContext) {
     try {;
       const channel = context.getChannelRef();
@@ -31,7 +32,9 @@ export class MessagingController {
       this.messageService.handleData(data);
       channel.ack(originalMsg);
     } catch (error) {
-      console.log('ERROR' + error);
+      throw new InternalServerErrorException(
+        errorMessages.DATA_RECEIVING_ERROR,
+      );
     }
   }
 }
