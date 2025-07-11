@@ -1,25 +1,37 @@
 import { Send, Users, Wifi } from "lucide-react";
 import type { Message } from "../types/message.type";
 import type { Socket } from "socket.io-client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const ClientTab: React.FC<{
   clientId: string;
   otherClientId: string;
   isActive: boolean;
-  messages: Message[];
   socket: Socket | null;
-}> = ({ clientId, otherClientId, isActive, messages, socket }) => {
+}> = ({ clientId, otherClientId, isActive, socket }) => {
+  const [messages, setMessages] = useState<Message[]>([]);
 
-    
   useEffect(() => {
     if (!socket) return;
-    socket?.on("connection", () => {
-      console.log("Connected");
-    });
+    // socket?.on("connection", () => {
+    //   console.log("Connected");
+    // });
+
     socket?.on("message", (data: Message) => {
-      console.log("DATA GOT");
-      console.log(data);
+
+      const newMessage: Message = {
+        id: `${clientId}-${messages.length}`,
+        type: "received",
+        sender: data.sender,
+        text: data.text,
+        timestamp: data.timestamp,
+      };
+      setMessages((msgs:Message[])=>{
+        const newMessages = [...msgs]
+        newMessages.push(newMessage)
+        return newMessages
+      });
+
     });
   }, [socket]);
 

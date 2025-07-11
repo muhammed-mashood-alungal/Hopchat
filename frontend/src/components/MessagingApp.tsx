@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import type { Message } from '../types/message.type';
 import ClientTab from './ClientTab';
 import { useSocket } from '../contexts/socket.context';
 
@@ -8,23 +7,7 @@ const MessagingApp: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'clientA' | 'clientB'>('clientA');
   const {clientOneSocket , clientTwoSocket} = useSocket()
   
-  const sampleMessages: Message[] = [
-    {
-      id: '1',
-      sender: 'clientA',
-      text: 'Hello Client B!',
-      timestamp: '10:30 AM',
-      type: 'sent'
-    },
-    {
-      id: '2',
-      sender: 'clientB',
-      text: 'Hi Client A! How are you?',
-      timestamp: '10:31 AM',
-      type: 'received'
-    }
-  ];
-
+  
   
 
   return (
@@ -59,14 +42,12 @@ const MessagingApp: React.FC = () => {
             clientId="clientA"
             otherClientId="clientB"
             isActive={activeTab === 'clientA'}
-            messages={sampleMessages}
             socket={clientOneSocket}
           />
           <ClientTab
             clientId="clientB"
             otherClientId="clientA"
             isActive={activeTab === 'clientB'}
-            messages={sampleMessages}
             socket={clientTwoSocket}
           />
         </div>

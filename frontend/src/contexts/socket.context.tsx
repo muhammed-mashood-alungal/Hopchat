@@ -7,7 +7,7 @@ import {
 } from "react";
 import { io, Socket } from "socket.io-client";
 
-const { VITE_APP_CLIENT_1_URL, VITE_APP_CLIENT_2_URL } = import.meta.env;
+
 
 interface SocketContextType {
   clientOneSocket: Socket | null;
@@ -20,9 +20,12 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
   const [clientTwoSocket, setClientTwoSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
+    console.log('IN CONTEXT')
+    const { VITE_APP_CLIENT_1_URL, VITE_APP_CLIENT_2_URL } = import.meta.env;
+    console.log(VITE_APP_CLIENT_1_URL,VITE_APP_CLIENT_2_URL)
     const clientOneSocket = io(VITE_APP_CLIENT_1_URL);
     const clientTwoSocket = io(VITE_APP_CLIENT_2_URL);
-    
+
     setClientOneSocket(clientOneSocket);
     setClientTwoSocket(clientTwoSocket);
     return () => {

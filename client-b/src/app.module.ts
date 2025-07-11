@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { MessagingModule } from './messaging/messaging.module';
 import { RabbitmqModule } from './rabbitmq/rabbitmq.module';
 import { ConfigModule } from '@nestjs/config';
+import { SocketGateway } from './socket/socket.gateway';
 
 @Module({
   imports: [
@@ -10,6 +11,6 @@ import { ConfigModule } from '@nestjs/config';
     }),
     MessagingModule, RabbitmqModule],
   controllers: [],
-  providers: [],
+  providers: [SocketGateway],
 })
 export class AppModule {}
