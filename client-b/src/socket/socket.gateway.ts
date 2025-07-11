@@ -15,7 +15,6 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   server: Server;
 
   handleConnection(client: Socket) {
-    console.log('Client Connected : ' + client.id);
     this.clientId = client.id;
   }
 

@@ -1,3 +1,6 @@
 export class MessageDto {
-    message : string
+  id: string;
+  sender: string;
+  text: string;
+  timestamp: string;
 }

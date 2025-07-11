@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { RabbitmqService } from 'src/rabbitmq/rabbitmq.service';
 import { SocketGateway } from 'src/socket/socket.gateway';
+import { MessageType } from './message.types';
 
 @Injectable()
 export class MessagingService {
@@ -15,7 +16,8 @@ export class MessagingService {
     this.socketGateway.emitMessageToClient(data)
   }
 
-  sendMessage(text: string) {
-    this.rabbitmqService.sendMessage('test', { sender: 'Client-B', text });
+  async sendMessage(data : MessageType) {
+    const res= await this.rabbitmqService.sendMessage('test', data);
+    console.log(res)
   }
 }

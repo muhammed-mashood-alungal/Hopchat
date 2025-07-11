@@ -11,16 +11,15 @@ export class MessagingController {
   constructor(private readonly messageService: MessagingService) {}
 
   @Post('send')
-  sendMessage(@Body() body: MessageDto, @Res() res: Response) {
-    const { message } = body;
-    this.messageService.sendMessage(message);
+  sendMessage(@Body() data: MessageDto, @Res() res: Response) {
+    
+    this.messageService.sendMessage(data);
     successResponse(res, StatusCodes.OK, ReasonPhrases.OK);
   }
 
   @EventPattern('test')
   async handleIncomingData(@Payload() data: any , @Ctx() context : RmqContext) {
     try {
-        console.log('Received')
         const channel = context.getChannelRef()
         const originalMsg = context.getMessage()
         

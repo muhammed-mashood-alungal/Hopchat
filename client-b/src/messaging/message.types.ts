@@ -1,4 +1,4 @@
-export class MessageDto {
+export interface MessageType {
   id: string;
   sender: string;
   text: string;

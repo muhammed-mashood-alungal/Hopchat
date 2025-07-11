@@ -10,7 +10,6 @@ export class RabbitmqService {
   }
 
   async sendMessage(pattern: string, data: any) {
-    console.log('EMITING')
-     this.client.emit(pattern, data);
+     return await  this.client.emit(pattern, data);
   }
 }

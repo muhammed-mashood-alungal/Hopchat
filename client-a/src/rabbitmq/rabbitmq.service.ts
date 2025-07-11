@@ -12,8 +12,6 @@ export class RabbitmqService {
   }
 
   async sendMessage(pattern: string, data: any) {
-    console.log('SENDING FROM A -----> B')
    const res = await this.client.emit(pattern, data)
-   console.log(res)
   }
 }

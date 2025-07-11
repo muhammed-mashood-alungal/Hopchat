@@ -2,6 +2,8 @@ import { Send, Users, Wifi } from "lucide-react";
 import type { Message } from "../types/message.type";
 import type { Socket } from "socket.io-client";
 import { useEffect, useState } from "react";
+import { API_ONE_SERVICES } from "../services/apiOne.service";
+import { API_TWO_SERVICES } from "../services/apiTwo.service";
 
 const ClientTab: React.FC<{
   clientId: string;
@@ -10,35 +12,60 @@ const ClientTab: React.FC<{
   socket: Socket | null;
 }> = ({ clientId, otherClientId, isActive, socket }) => {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [myMessage, setMyMessage] = useState<string>("");
 
   useEffect(() => {
     if (!socket) return;
-    // socket?.on("connection", () => {
-    //   console.log("Connected");
-    // });
 
     socket?.on("message", (data: Message) => {
-
       const newMessage: Message = {
-        id: `${clientId}-${messages.length}`,
+        id: data.id,
         type: "received",
         sender: data.sender,
         text: data.text,
         timestamp: data.timestamp,
       };
-      setMessages((msgs:Message[])=>{
-        const newMessages = [...msgs]
-        newMessages.push(newMessage)
-        return newMessages
+      setMessages((msgs: Message[]) => {
+        const newMessages = [...msgs];
+        newMessages.push(newMessage);
+        return newMessages;
       });
-
+      
     });
   }, [socket]);
+
+  const handleSendMessage = async () => {
+    if (myMessage.trim().length === 0) {
+      return;
+    }
+    const newMessage = {
+      id: `${clientId}-${messages.length}`,
+      sender: clientId,
+      text: myMessage,
+      timestamp: new Date().toLocaleTimeString(),
+    };
+
+    setMessages((msgs: Message[]) => {
+      const newMsgs = [...msgs];
+      newMsgs.push({ ...newMessage, type: "sent" });
+      return newMsgs;
+    });
+    setMyMessage('')
+
+    if (clientId === "clientA") {
+      await API_ONE_SERVICES.sendMessage(newMessage);
+    } else if (clientId === "clientB") {
+      await API_TWO_SERVICES.sendMessage(newMessage);
+    }
+  };
+
+  const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMyMessage(e.target.value);
+  };
 
   return (
     <div className={`flex-1 ${isActive ? "block" : "hidden"}`}>
       <div className="bg-white rounded-lg shadow-lg h-full flex flex-col">
-        {/* Header */}
         <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 rounded-t-lg">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
@@ -47,17 +74,10 @@ const ClientTab: React.FC<{
                 Client {clientId.slice(-1).toUpperCase()}
               </h2>
             </div>
-            <div className="flex items-center space-x-2">
-              <div className="flex items-center space-x-1 px-2 py-1 rounded-full text-xs bg-green-500 bg-opacity-20">
-                <Wifi className="h-3 w-3" />
-                <span>Connected</span>
-              </div>
-            </div>
           </div>
         </div>
 
-        {/* Messages Area */}
-        <div className="flex-1 p-4 overflow-y-auto bg-gray-50 min-h-0">
+        <div className="flex-1 p-4 overflow-y-auto bg-gray-50 min-h-0 max-h-[500px]">
           <div className="space-y-3">
             {messages.map((msg) => (
               <div
@@ -87,20 +107,27 @@ const ClientTab: React.FC<{
                 </div>
               </div>
             ))}
+            {messages.length == 0 && (
+                <div className="text-center text-gray-600">No Messages Yet</div>
+            )}
           </div>
         </div>
 
-        {/* Message Input */}
         <div className="p-4 border-t border-gray-200">
           <div className="flex space-x-2">
             <input
+              value={myMessage}
+              onChange={handleMessageChange}
               type="text"
               placeholder={`Message to Client ${otherClientId
                 .slice(-1)
                 .toUpperCase()}...`}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
-            <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+            <button
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              onClick={handleSendMessage}
+            >
               <Send className="h-4 w-4" />
             </button>
           </div>
