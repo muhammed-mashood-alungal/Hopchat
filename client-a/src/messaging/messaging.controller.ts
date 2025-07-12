@@ -20,24 +20,19 @@ export class MessagingController {
   constructor(private readonly messageService: MessagingService) {}
 
   @Post('send')
-  sendMessage(@Body() message: MessageDto, @Res() res: Response) {
-    console.log('SENDING MESSAGE FROM SERVER_1'+ message)
-    this.messageService.sendMessage(message)
-      .then(() => {
-        console.log('Server_1 - Message sent successfully to RabbitMQ');
-        successResponse(res, StatusCodes.OK, ReasonPhrases.OK);
-      })
-      .catch((err) => {
-        console.error('Server_1 - Failed to send message:', err.message);
-        throw new InternalServerErrorException(errorMessages.MESSAGE_SENT_FAILED);
-      });
-   
+  async sendMessage(@Body() message: MessageDto, @Res() res: Response) {
+    try {
+      await this.messageService.sendMessage(message)
+      successResponse(res, StatusCodes.OK, ReasonPhrases.OK);
+    } catch (error) {
+       throw new InternalServerErrorException(errorMessages.MESSAGE_SENT_FAILED);
+    }
   }
 
+ 
   @EventPattern('message')
   async handleIncomingData(@Payload() data: any, @Ctx() context: RmqContext) {
     try {
-      console.log('ACCEPTING MESSAGE IN SERVER_1'+data)
       const channel = context.getChannelRef();
       const originalMsg = context.getMessage();
 

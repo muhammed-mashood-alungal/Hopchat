@@ -15,7 +15,7 @@ import { errorMessages } from 'src/common/constants/error-messages.constants';
 @WebSocketGateway({
   path: '/client-a/socket.io', 
   cors: {
-    origin: ['https://hopchat-sigma.vercel.app'],
+    origin: [process.env.CLIENT_URL!],
     credentials: true,
   },
 })
@@ -24,12 +24,16 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private clientId: string | null = null;
   @WebSocketServer()
   server: Server;
+  
+  afterInit() {
+    console.log('Server_2 - WebSocket server initialized');
+  }
 
   handleConnection(client: Socket) {
     this.clientId = client.id;
   }
 
-  handleDisconnect() {
+  handleDisconnect(client : Socket) {
     this.clientId = null;
   }
 
