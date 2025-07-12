@@ -25,6 +25,33 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
       transports: ["websocket"],
     });
 
+    clientOneSocket.on('connect', () => {
+      console.log('Frontend - Connected to Server_1 WebSocket:', VITE_APP_CLIENT_1_URL);
+    });
+    clientOneSocket.on('connect_error', (error) => {
+      console.error('Frontend - Server_1 WebSocket connection error:', error.message);
+    });
+    clientOneSocket.on('disconnect', (reason) => {
+      console.log('Frontend - Server_1 WebSocket disconnected:', reason);
+    });
+    clientOneSocket.on('message', (data) => {
+      console.log('Frontend - Received message from Server_1:', data);
+    });
+
+    // Debug Client 2 Socket
+    clientTwoSocket.on('connect', () => {
+      console.log('Frontend - Connected to Server_2 WebSocket:', VITE_APP_CLIENT_2_URL);
+    });
+    clientTwoSocket.on('connect_error', (error) => {
+      console.error('Frontend - Server_2 WebSocket connection error:', error.message);
+    });
+    clientTwoSocket.on('disconnect', (reason) => {
+      console.log('Frontend - Server_2 WebSocket disconnected:', reason);
+    });
+    clientTwoSocket.on('message', (data) => {
+      console.log('Frontend - Received message from Server_2:', data);
+    });
+
     setClientOneSocket(clientOneSocket);
     setClientTwoSocket(clientTwoSocket);
     return () => {

@@ -17,6 +17,7 @@ export class MessagingService {
   }
 
   async sendMessage(message: MessageDto) {
+    console.log('SENDING MESSAGE'+ message)
     return await this.rabbitMqService.sendMessage('message', message);
   }
 }
