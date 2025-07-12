@@ -1,9 +1,4 @@
-import {
-  createContext,
-  useEffect,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useEffect, useState, type ReactNode } from "react";
 import { io, Socket } from "socket.io-client";
 
 interface SocketContextType {
@@ -11,15 +6,24 @@ interface SocketContextType {
   clientTwoSocket: Socket | null;
 }
 
-export const SocketContext = createContext<SocketContextType | undefined>(undefined);
+export const SocketContext = createContext<SocketContextType | undefined>(
+  undefined
+);
 export const SocketProvider = ({ children }: { children: ReactNode }) => {
   const [clientOneSocket, setClientOneSocket] = useState<Socket | null>(null);
   const [clientTwoSocket, setClientTwoSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
     const { VITE_APP_CLIENT_1_URL, VITE_APP_CLIENT_2_URL } = import.meta.env;
-    const clientOneSocket = io(VITE_APP_CLIENT_1_URL);
-    const clientTwoSocket = io(VITE_APP_CLIENT_2_URL);
+    const clientOneSocket = io(VITE_APP_CLIENT_1_URL, {
+      path: "/client-a/socket.io",
+      transports: ["websocket"], 
+    });
+
+    const clientTwoSocket = io(VITE_APP_CLIENT_2_URL, {
+      path: "/client-b/socket.io",
+      transports: ["websocket"],
+    });
 
     setClientOneSocket(clientOneSocket);
     setClientTwoSocket(clientTwoSocket);
