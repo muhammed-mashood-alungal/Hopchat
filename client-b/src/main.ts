@@ -20,7 +20,7 @@ async function bootstrap() {
   
   const port = process.env.PORT || 5001;
   await app.listen(port, () => {
-    console.log('SERVER-1 STARTED'+ port);
+    console.log('SERVER-2 STARTED'+ port);
   });
 }
 bootstrap();
