@@ -14,8 +14,8 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
   const [clientTwoSocket, setClientTwoSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
-    const {   VITE_APP_URL } =
-      import.meta.env;
+    // const {   VITE_APP_URL } =
+    //   import.meta.env;
 
     const clientOneSocket = io('https://hopchat.mashood.site', {
       path: "/client-a/socket.io",
