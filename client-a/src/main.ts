@@ -6,10 +6,10 @@ import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
+  
   app.setGlobalPrefix('client-a');
 
-  console.log(process.env.CLIENT_URL);
+
   app.enableCors({
     origin: [process.env.CLIENT_URL],
     methods: ['GET', 'POST'],
@@ -22,8 +22,8 @@ async function bootstrap() {
 
   const port = process.env.PORT || 5000;
 
-  await app.listen(port, () => {
-    console.log('SERVER_1 STARTED');
+  await app.listen(port, '0.0.0.0', () => {
+    console.log('SERVER_1 STARTED '+port);
   });
 }
 bootstrap();

@@ -15,7 +15,7 @@ import { errorMessages } from 'src/common/constants/error-messages.constants';
 @WebSocketGateway({
   path: '/client-a/socket.io', 
   cors: {
-    origin: [process.env.CLIENT_URL!],
+    origin: [process.env.CLIENT_URL],
     credentials: true,
   },
 })
@@ -30,10 +30,11 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   handleConnection(client: Socket) {
+    console.log('Client Connected : '+client.id)
     this.clientId = client.id;
   }
 
-  handleDisconnect(client : Socket) {
+  handleDisconnect() {
     this.clientId = null;
   }
 
@@ -41,10 +42,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (this.clientId) {
       this.server.to(this.clientId).emit('message', data);
     } else {
-      throw new HttpException(
-        errorMessages.NO_CLIENT_CONNECTED,
-        HttpStatus.BAD_REQUEST,
-      );
+      console.log(errorMessages.NO_CLIENT_CONNECTED)
     }
   }
 }
