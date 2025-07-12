@@ -14,19 +14,19 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
   const [clientTwoSocket, setClientTwoSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
-    const { VITE_APP_URL } = import.meta.env;
-    const clientOneSocket = io(VITE_APP_URL, {
+    const { VITE_APP_CLIENT_1_URL , VITE_APP_CLIENT_2_URL } = import.meta.env;
+    const clientOneSocket = io(VITE_APP_CLIENT_1_URL, {
       path: "/client-a/socket.io",
       transports: ["websocket"], 
     });
 
-    const clientTwoSocket = io(VITE_APP_URL, {
+    const clientTwoSocket = io(VITE_APP_CLIENT_2_URL, {
       path: "/client-b/socket.io",
       transports: ["websocket"],
     });
 
     clientOneSocket.on('connect', () => {
-      console.log('Frontend - Connected to Server_1 WebSocket:', VITE_APP_URL);
+      console.log('Frontend - Connected to Server_1 WebSocket:', VITE_APP_CLIENT_1_URL);
     });
     clientOneSocket.on('connect_error', (error) => {
       console.error('Frontend - Server_1 WebSocket connection error:', error.message);
@@ -40,7 +40,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
 
     
     clientTwoSocket.on('connect', () => {
-      console.log('Frontend - Connected to Server_2 WebSocket:', VITE_APP_URL);
+      console.log('Frontend - Connected to Server_2 WebSocket:', VITE_APP_CLIENT_2_URL);
     });
     clientTwoSocket.on('connect_error', (error) => {
       console.error('Frontend - Server_2 WebSocket connection error:', error.message);
