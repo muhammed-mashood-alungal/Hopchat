@@ -19,7 +19,6 @@ export class MessagingController {
 
   @Post('send')
   sendMessage(@Body() message: MessageDto, @Res() res: Response) {
-    console.log('SENDING MESSAGE FROM SERVER_2'+message)
     this.messageService.sendMessage(message);
     successResponse(res, StatusCodes.OK, ReasonPhrases.OK);
   }
@@ -27,7 +26,6 @@ export class MessagingController {
   @EventPattern('message')
   async handleIncomingData(@Payload() data: any, @Ctx() context: RmqContext) {
     try {
-      console.log('RECIENVING MESSAGE FROM A '+data)
       const channel = context.getChannelRef();
       const originalMsg = context.getMessage();
 
