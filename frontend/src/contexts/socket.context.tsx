@@ -14,9 +14,9 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
   const [clientTwoSocket, setClientTwoSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
-    const { VITE_APP_CLIENT_1_URL, VITE_APP_CLIENT_2_URL, VITE_APP_URL } =
+    const {   VITE_APP_URL } =
       import.meta.env;
-      
+
     const clientOneSocket = io(VITE_APP_URL, {
       path: "/client-a/socket.io",
       transports: ["websocket"],
