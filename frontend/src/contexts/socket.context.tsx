@@ -38,7 +38,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
       console.log('Frontend - Received message from Server_1:', data);
     });
 
-    // Debug Client 2 Socket
+    
     clientTwoSocket.on('connect', () => {
       console.log('Frontend - Connected to Server_2 WebSocket:', VITE_APP_URL);
     });
