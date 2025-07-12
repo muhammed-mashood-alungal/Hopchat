@@ -8,14 +8,19 @@ async function bootstrap() {
 
   app.enableCors({
     origin: [process.env.CLIENT_URL],
-    methods: ['GET', 'POST',],
+    methods: ['GET', 'POST'],
   });
+
+  console.log('INITIALISIING')
+  console.log(process.env)
+
+  app.connectMicroservice<MicroserviceOptions>(rabbitMQConsumerConfig());
+
+  await app.startAllMicroservices();
   
-  app.connectMicroservice<MicroserviceOptions>(rabbitMQConsumerConfig())
-
-  await app.startAllMicroservices()
-
-  const port = process.env.PORT || 5001
-  await app.listen(port)
+  const port = process.env.PORT || 5001;
+  await app.listen(port, () => {
+    console.log('SERVER-1 STARTED'+ port);
+  });
 }
 bootstrap();

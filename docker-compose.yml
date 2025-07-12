@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   rabbitmq:
     image: rabbitmq:3-management
@@ -10,31 +8,42 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
 
   client-a:
     build:
       context: ./client-a
       dockerfile: Dockerfile
+    env_file:
+      - ./client-b/.env
     container_name: client-a
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     environment:
       RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
       QUEUE_NAME: to-clientB
       LISTEN_QUEUE: to-clientA
     ports:
-      - "3001:3000"
+      - "3000:3000"
 
   client-b:
     build:
       context: ./client-b
       dockerfile: Dockerfile
+    env_file:
+      - ./client-b/.env
     container_name: client-b
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     environment:
       RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
       QUEUE_NAME: to-clientA
       LISTEN_QUEUE: to-clientB
     ports:
-      - "3002:3000"
+      - "3001:3001"

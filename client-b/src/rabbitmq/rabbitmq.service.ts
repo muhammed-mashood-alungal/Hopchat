@@ -9,6 +9,10 @@ export class RabbitmqService {
   private client: ClientProxy;
   constructor() {
     this.client = ClientProxyFactory.create(rabbitMQProducerConfig());
+    this.client.connect()
+    .catch((err) => {
+      console.error('RabbitMQ connection failed:', err.message);
+    });
   }
 
   async sendMessage(pattern: string, data: any) {

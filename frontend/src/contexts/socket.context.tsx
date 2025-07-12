@@ -1,6 +1,5 @@
 import {
   createContext,
-  useContext,
   useEffect,
   useState,
   type ReactNode,
@@ -12,7 +11,7 @@ interface SocketContextType {
   clientTwoSocket: Socket | null;
 }
 
-const SocketContext = createContext<SocketContextType | undefined>(undefined);
+export const SocketContext = createContext<SocketContextType | undefined>(undefined);
 export const SocketProvider = ({ children }: { children: ReactNode }) => {
   const [clientOneSocket, setClientOneSocket] = useState<Socket | null>(null);
   const [clientTwoSocket, setClientTwoSocket] = useState<Socket | null>(null);
@@ -35,12 +34,4 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </SocketContext.Provider>
   );
-};
-
-export const useSocket = () => {
-  const context = useContext(SocketContext);
-  if (!context) {
-    throw new Error("ERROR");
-  }
-  return context;
 };

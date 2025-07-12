@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ClientTab from "./ClientTab";
-import { useSocket } from "../contexts/socket.context";
+import { useSocket } from "../hooks/useSocket.hook";
 
 const MessagingApp: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"clientA" | "clientB">("clientA");
