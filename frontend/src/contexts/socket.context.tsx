@@ -17,11 +17,11 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
     const {   VITE_APP_URL } =
       import.meta.env;
 
-    const clientOneSocket = io(VITE_APP_URL, {
+    const clientOneSocket = io('https://hopchat.mashood.site', {
       path: "/client-a/socket.io",
       transports: ["websocket"],
     });
-    const clientTwoSocket = io(VITE_APP_URL, {
+    const clientTwoSocket = io('https://hopchat.mashood.site', {
       path: "/client-b/socket.io",
       transports: ["websocket"],
     });

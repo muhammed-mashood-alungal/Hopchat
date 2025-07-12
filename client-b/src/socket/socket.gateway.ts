@@ -9,7 +9,11 @@ import { Server, Socket } from 'socket.io';
 import { errorMessages } from 'src/common/constants/error-messages.constants';
 
 @WebSocketGateway({
-  cors: { origin: '*' },
+  path: '/client-b/socket.io', 
+  cors: {
+    origin: ['https://hopchat-sigma.vercel.app'],
+    credentials: true,
+  },
 })
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private clientId: string | null = null;

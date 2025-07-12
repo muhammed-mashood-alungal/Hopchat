@@ -13,9 +13,9 @@ import { Server, Socket } from 'socket.io';
 import { errorMessages } from 'src/common/constants/error-messages.constants';
 
 @WebSocketGateway({
+  path: '/client-a/socket.io', 
   cors: {
-    origin: 'https://hopchat-sigma.vercel.app',
-    methods: ['GET', 'POST'],
+    origin: ['https://hopchat-sigma.vercel.app'],
     credentials: true,
   },
 })
